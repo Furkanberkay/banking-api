@@ -1,6 +1,7 @@
 package main
 
 import (
+	"banking-api/internal/db"
 	"log"
 	"net/http"
 	"os"
@@ -39,8 +40,10 @@ func main() {
 		log.Fatal("jwt secret not set")
 	}
 
-	_ = db.Connect()
+	dbConn := db.Connect()
+	handlers.InitHandlers(dbConn)
 	r := gin.Default()
+	r.Use(gin.Logger())
 
 	//cors middleware - applied globally for all routes
 	r.Use(corsMiddleware())
